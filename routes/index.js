@@ -62,14 +62,13 @@ const init = () => {
   router.route('/shortest')
     .get(async (req, res) => {
       const route_id = req.query.route
-      const path = req.query.path
-      const start = path[0]
-      const end = path[1]
+      const start = req.query.start
+      const end = req.query.end
 
       try {
         const result = await Routes.findOne({_id: route_id})
         const cost = shortestPathCost(start, end, result.paths)
-        return res.json({ path: path.split('').join('-'), cost})
+        return res.json({ path: start + '-' + end, cost})
       } catch (err) {
         return res.status(500).json(err)
       }
