@@ -21,7 +21,6 @@ const getShortestTable = (start, paths) => {
   let distance = 0
   let previous = null
   while (unvisited.length > 0) {
-    // console.log('vertex:\t', vertex)
     const vertexIndex = table.findIndex(x => x.vertex === vertex)
 
     if (vertex === start) {
@@ -47,23 +46,21 @@ const getShortestTable = (start, paths) => {
       visited.push(vertex)
       vertex = Object.keys(visiting).reduce((a, b) => visiting[a] > visiting[b] ? b : a)
       visiting = paths[vertex]
-
-      
     } else {
-      vertex = Object.keys(visiting).reduce((a, b) => visiting[a] > visiting[b] ? b : a)
-      visiting = paths[vertex]
-
-      visited.map((node) => {
-        if (visiting[node]) {
-          delete visiting[node]
+      let a = []
+      unvisited.map((node) => {
+        const index = table.findIndex(x => x.vertex === node)
+        if (table[index].previous) {
+          a.push(table[index])
         }
       })
 
-      vertex = Object.keys(visiting).reduce((a, b) => visiting[a] > visiting[b] ? b : a)
+      vertex = a.reduce((a, b) => a.distance > b.distance ? b : a)
+      vertex = vertex.vertex
       visiting = paths[vertex]
+
     }
       
-    // console.log(table)
   }
 
   return table
